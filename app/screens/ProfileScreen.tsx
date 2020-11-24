@@ -4,8 +4,9 @@ import { StatusBar } from "expo-status-bar";
 
 import { ProfileScreenNavigationProp } from "./types";
 import ColoredButton from "../components/ColoredButton";
-import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+
+import useDimensions from "../../utils/useDimensions";
 
 function ProfileScreen({
   navigation,
@@ -19,6 +20,8 @@ function ProfileScreen({
   const [current, setCurrent] = useState<string>("");
   const [chars, setChars] = useState<string[]>([]);
 
+  const { screenWidth } = useDimensions();
+
   const changeTextHandler = (text: string) => {
     setCurrent(text);
   };
@@ -28,41 +31,53 @@ function ProfileScreen({
   };
 
   return (
-    <ScrollView
-      // eslint-disable-next-line react-native/no-inline-styles
-      contentContainerStyle={{
-        flexGrow: 1,
-      }}
-    >
-      <MainView>
-        <MainText>Your profile!</MainText>
-        <StatusBar style="auto" />
-        <ColoredButton
-          textColor="black"
-          backgroundColor="white"
-          text="Go back"
-          onPress={goToHomePage}
-        />
+    <MainView>
+      <MainText>You have to do this</MainText>
+      <StatusBar style="auto" />
+      <InputBox>
         <StyledInput
-          placeholder="Add characteristic"
+          placeholder="Add task"
+          placeholderTextColor="lightgray"
           onChangeText={changeTextHandler}
         />
         <ColoredButton
           textColor="black"
           borderRadius={20}
           backgroundColor="yellow"
-          text="Add"
           onPress={pressHandler}
           width={80}
           height={50}
-        />
-        <View>
-          {chars.map((characteristic) => {
-            return <CharText key={characteristic}>{characteristic}</CharText>;
-          })}
-        </View>
-      </MainView>
-    </ScrollView>
+        >
+          Add
+        </ColoredButton>
+      </InputBox>
+      <ScrollView
+        style={{
+          width: screenWidth,
+        }}
+        // eslint-disable-next-line react-native/no-inline-styles
+        contentContainerStyle={{
+          alignItems: "flex-start",
+        }}
+      >
+        {chars.map((characteristic) => {
+          return (
+            <CharTextBox key={characteristic}>
+              {"\u2022 " + characteristic}
+            </CharTextBox>
+          );
+        })}
+      </ScrollView>
+      <ColoredButton
+        textColor="black"
+        backgroundColor="white"
+        onPress={goToHomePage}
+        height="80"
+        width={screenWidth}
+      >
+        Go back
+      </ColoredButton>
+    </MainView>
   );
 }
 
@@ -72,28 +87,36 @@ const MainView = styled.View`
   flex: 1;
   background-color: black;
   align-items: center;
-  /* justify-content: center; */
+  /* justify-content: space-between; */
 `;
 
 const MainText = styled.Text`
   color: white;
-  font-size: 20px;
-  height: 200px;
+  font-size: 40px;
+  margin: 20px 0;
 `;
 
-const CharText = styled.Text`
+const InputBox = styled.View`
+  align-items: flex-start;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 0 20px;
+  /* flex: 1; */
+`;
+
+const CharTextBox = styled.Text`
   color: white;
-  border-color: white;
-  font-size: 10px;
-  margin-top: 10px;
+  font-size: 20px;
+  margin: 20px 0 0 20px;
+  text-decoration: dashed;
 `;
 
 const StyledInput = styled.TextInput`
   color: white;
   border: white;
   font-size: 15px;
-  margin: 10px;
+  margin-right: 20px;
   padding: 5px;
   height: 50px;
-  width: 100px;
+  flex: 1;
 `;
