@@ -26,8 +26,12 @@ function ProfileScreen({
     setCurrent(text);
   };
 
-  const pressHandler = () => {
+  const addCurrentItem = () => {
     setChars([...chars, current]);
+  };
+
+  const removeItem = (item: string) => {
+    setChars(chars.filter((char) => char !== item));
   };
 
   return (
@@ -44,7 +48,7 @@ function ProfileScreen({
           textColor="black"
           borderRadius={20}
           backgroundColor="yellow"
-          onPress={pressHandler}
+          onPress={addCurrentItem}
           width={80}
           height={50}
         >
@@ -62,8 +66,14 @@ function ProfileScreen({
       >
         {chars.map((characteristic) => {
           return (
-            <CharTextBox key={characteristic}>
-              {"\u2022 " + characteristic}
+            <CharTextBox
+              key={characteristic}
+              width={screenWidth}
+              onPress={() => {
+                removeItem(characteristic);
+              }}
+            >
+              <CharText>{characteristic}</CharText>
             </CharTextBox>
           );
         })}
@@ -96,6 +106,12 @@ const MainText = styled.Text`
   margin: 20px 0;
 `;
 
+const CharText = styled.Text`
+  color: white;
+  /* font-size: 40px;
+  margin: 20px 0; */
+`;
+
 const InputBox = styled.View`
   align-items: flex-start;
   flex-direction: row;
@@ -104,10 +120,15 @@ const InputBox = styled.View`
   /* flex: 1; */
 `;
 
-const CharTextBox = styled.Text`
+const CharTextBox = styled.TouchableOpacity<{ width: number }>`
+  justify-content: center;
+  width: ${(props) => props.width - 40}px;
+  padding-left: 5px;
+  height: 40px;
+  border: 5px grey;
   color: white;
   font-size: 20px;
-  margin: 20px 0 0 20px;
+  margin: 20px 20px 0 20px;
   text-decoration: dashed;
 `;
 
